@@ -77,6 +77,35 @@ npm run dev
 npm run build
 ```
 
+### 5️⃣ CI/CD to cPanel (GitHub Actions)
+
+This repo includes an automatic deployment workflow at [.github/workflows/deploy-cpanel.yml](.github/workflows/deploy-cpanel.yml).
+
+On each push to `main`, GitHub Actions will:
+
+1. Install dependencies
+2. Build the app (`npm run build`)
+3. Upload the `dist` output to cPanel via SSH (rsync)
+
+Add these repository secrets in GitHub:
+
+| Secret Name            | Example Value                               |
+| ---------------------- | ------------------------------------------- |
+| `CPANEL_SSH_HOST`      | `yourdomain.com`                            |
+| `CPANEL_SSH_PORT`      | `22`                                        |
+| `CPANEL_SSH_USERNAME`  | `cpanel-ssh-username`                       |
+| `CPANEL_SSH_PRIVATE_KEY` | Multi-line private key text               |
+| `CPANEL_REMOTE_DIR`    | `/public_html/` or `/public_html/api/`     |
+| `VITE_BASE_PATH`       | `/` or `/api/`                              |
+
+Notes:
+
+- Use `/public_html/` when deploying to `https://yourdomain.com`.
+- Use `/public_html/api/` when deploying to `https://yourdomain.com/api`.
+- Use `VITE_BASE_PATH=/` for root-domain deploys, and `VITE_BASE_PATH=/api/` for `/api` deploys.
+- Ensure your `.htaccess` is in `public/.htaccess` so it is copied into `dist/.htaccess` during build.
+- For `CPANEL_SSH_PRIVATE_KEY`, paste the full private key including the `BEGIN` and `END` lines.
+
 ---
 
 ## 🔑 Auth Slice Example

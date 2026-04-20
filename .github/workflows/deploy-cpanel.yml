@@ -1,0 +1,81 @@
+name: Deploy to cPanel
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cpanel-deploy-main
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        env:
+          VITE_BASE_PATH: ${{ secrets.VITE_BASE_PATH }}
+        run: npm run build
+
+      - name: Validate deployment secrets
+        env:
+          CPANEL_SSH_HOST: ${{ secrets.CPANEL_SSH_HOST }}
+          CPANEL_SSH_USERNAME: ${{ secrets.CPANEL_SSH_USERNAME }}
+          CPANEL_SSH_PRIVATE_KEY: ${{ secrets.CPANEL_SSH_PRIVATE_KEY }}
+          CPANEL_REMOTE_DIR: ${{ secrets.CPANEL_REMOTE_DIR }}
+        run: |
+          test -n "$CPANEL_SSH_HOST" || (echo "Missing secret: CPANEL_SSH_HOST" && exit 1)
+          test -n "$CPANEL_SSH_USERNAME" || (echo "Missing secret: CPANEL_SSH_USERNAME" && exit 1)
+          test -n "$CPANEL_SSH_PRIVATE_KEY" || (echo "Missing secret: CPANEL_SSH_PRIVATE_KEY" && exit 1)
+          test -n "$CPANEL_REMOTE_DIR" || (echo "Missing secret: CPANEL_REMOTE_DIR" && exit 1)
+
+      - name: Start SSH agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.CPANEL_SSH_PRIVATE_KEY }}
+
+      - name: Add server to known_hosts
+        env:
+          CPANEL_SSH_HOST: ${{ secrets.CPANEL_SSH_HOST }}
+          CPANEL_SSH_PORT: ${{ secrets.CPANEL_SSH_PORT }}
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p "${CPANEL_SSH_PORT:-22}" -H "$CPANEL_SSH_HOST" >> ~/.ssh/known_hosts
+
+      - name: Ensure remote directory exists
+        env:
+          CPANEL_SSH_HOST: ${{ secrets.CPANEL_SSH_HOST }}
+          CPANEL_SSH_PORT: ${{ secrets.CPANEL_SSH_PORT }}
+          CPANEL_SSH_USERNAME: ${{ secrets.CPANEL_SSH_USERNAME }}
+          CPANEL_REMOTE_DIR: ${{ secrets.CPANEL_REMOTE_DIR }}
+        run: |
+          ssh -p "${CPANEL_SSH_PORT:-22}" "$CPANEL_SSH_USERNAME@$CPANEL_SSH_HOST" "mkdir -p '$CPANEL_REMOTE_DIR'"
+
+      - name: Deploy dist to cPanel via SSH
+        env:
+          CPANEL_SSH_HOST: ${{ secrets.CPANEL_SSH_HOST }}
+          CPANEL_SSH_PORT: ${{ secrets.CPANEL_SSH_PORT }}
+          CPANEL_SSH_USERNAME: ${{ secrets.CPANEL_SSH_USERNAME }}
+          CPANEL_REMOTE_DIR: ${{ secrets.CPANEL_REMOTE_DIR }}
+        run: |
+          rsync -avz --omit-dir-times --no-perms \
+            -e "ssh -p ${CPANEL_SSH_PORT:-22}" \
+            ./dist/ "$CPANEL_SSH_USERNAME@$CPANEL_SSH_HOST:$CPANEL_REMOTE_DIR"
