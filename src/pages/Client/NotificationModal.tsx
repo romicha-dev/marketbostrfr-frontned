@@ -3,13 +3,13 @@ import { Bell, X } from "lucide-react";
 import { useGetNotificationsQuery, useReadAllNotificationsMutation, useReadNotificationMutation } from "@/redux/features/admin/notificationApi";
 
 
-interface Notification {
-  id: string;
-  type?: string;
-  message: string;
-  createdAt: string;
-  isRead: boolean;
-}
+// interface Notification {
+//   id: string;
+//   type?: string;
+//   message: string;
+//   createdAt: string;
+//   isRead: boolean;
+// }
 
 interface NotificationModalProps {
   isOpen: boolean;
