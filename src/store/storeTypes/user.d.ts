@@ -1,0 +1,20 @@
+export type TUser = {
+  id: string;
+ firstName: string;
+  lastName: string;
+  phone_number: string;
+  city: string;
+  area: string;
+  password: string;
+  confirm_password: string;
+  email: string;
+  fullName: string;
+  role: "ADMIN" | "CLIENT";
+  isVerified: boolean;
+  isActive: boolean;
+  isDeleted: boolean;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  profileImageUrl?: string;
+};
