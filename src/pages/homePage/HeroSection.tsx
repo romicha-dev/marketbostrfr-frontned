@@ -117,7 +117,7 @@ export default function HeroSection() {
             {/* LEFT CONTENT */}
             <div className="flex flex-col w-full lg:max-w-[52%]">
 <h1 className="text-[32px]  md:px-0 sm:text-[40px] md:text-5xl font-bold font-arima  px-3 lg:whitespace-nowrap md:leading-[150%] not-italic text-gray-900 mb-6">
-  Worldwide Shopping.
+  Worldwide Shopping. sdfsdfsdfsdf
   <span className="block md:whitespace-nowrap">
     Fast, Reliable Shipping with KayLeo.
   </span>
