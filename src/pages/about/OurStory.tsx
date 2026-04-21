@@ -1,6 +1,6 @@
 import CommonWrapper from "@/common/CommonWrapper";
-import img1 from '../../../public/images/about/storyImg1.jpg'
-import img2 from '../../../public/images/about/storyImg2.png'
+const img1 = "/images/about/storyImg1.jpg";
+const img2 = "/images/about/storyImg2.png";
 
 export default function OurStory() {
   return (

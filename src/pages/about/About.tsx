@@ -9,7 +9,7 @@ const About = () => {
     <div className="">
       <div className="mt-10 px-3 md:px-10">
         <CommonBanner
-          backgroundImage={"../../../public/images/about/aboutBanner.png"}
+          backgroundImage="/images/about/aboutBanner.png"
           title="Dedicated to the Clarity of Every Vision"
           subtitle="Your trusted partner for international shipping to DOM-TOM territories since 2020."
           buttonText="Access Portal"

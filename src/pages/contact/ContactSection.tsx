@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import img1 from '../../../public/images/about/storyImg2.png'
-import img2 from '../../../public/images/about/storyImg1.jpg'
-import img3 from '../../../public/images/contact/minImg.jpg'
-import img4 from '../../../public/images/home/heroImg1.png'
-import img5 from '../../../public/images/services/servicesBanner.svg'
+const img1 = "/images/about/storyImg2.png";
+const img2 = "/images/about/storyImg1.jpg";
+const img3 = "/images/contact/minImg.jpg";
+const img4 = "/images/home/heroImg1.png";
+const img5 = "/images/services/servicesBanner.svg";
 import CommonWrapper from '@/common/CommonWrapper';
 import MapSection from './Map';
 

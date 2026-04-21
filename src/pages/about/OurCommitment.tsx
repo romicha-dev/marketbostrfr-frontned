@@ -1,7 +1,7 @@
 
 import { useNavigate } from "react-router-dom";
-import bgImg1 from '../../../public/images/about/commitmentbgImg1.svg'
-import bgImg2 from '../../../public/images/about/commitmentbgImg.svg'
+const bgImg1 = "/images/about/commitmentbgImg1.svg";
+const bgImg2 = "/images/about/commitmentBgImg.svg";
 
 export default function OurCommitment() {
   const navigate = useNavigate()
